@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include sheets2doctype *.css
+recursive-include sheets2doctype *.csv
+recursive-include sheets2doctype *.html
+recursive-include sheets2doctype *.ico
+recursive-include sheets2doctype *.js
+recursive-include sheets2doctype *.json
+recursive-include sheets2doctype *.md
+recursive-include sheets2doctype *.png
+recursive-include sheets2doctype *.py
+recursive-include sheets2doctype *.svg
+recursive-include sheets2doctype *.txt
+recursive-exclude sheets2doctype *.pyc
