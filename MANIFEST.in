@@ -4,15 +4,15 @@ include *.json
 include *.md
 include *.py
 include *.txt
-recursive-include sheets2doctype *.css
-recursive-include sheets2doctype *.csv
-recursive-include sheets2doctype *.html
-recursive-include sheets2doctype *.ico
-recursive-include sheets2doctype *.js
-recursive-include sheets2doctype *.json
-recursive-include sheets2doctype *.md
-recursive-include sheets2doctype *.png
-recursive-include sheets2doctype *.py
-recursive-include sheets2doctype *.svg
-recursive-include sheets2doctype *.txt
-recursive-exclude sheets2doctype *.pyc
+recursive-include google_sheets_connector *.css
+recursive-include google_sheets_connector *.csv
+recursive-include google_sheets_connector *.html
+recursive-include google_sheets_connector *.ico
+recursive-include google_sheets_connector *.js
+recursive-include google_sheets_connector *.json
+recursive-include google_sheets_connector *.md
+recursive-include google_sheets_connector *.png
+recursive-include google_sheets_connector *.py
+recursive-include google_sheets_connector *.svg
+recursive-include google_sheets_connector *.txt
+recursive-exclude google_sheets_connector *.pyc

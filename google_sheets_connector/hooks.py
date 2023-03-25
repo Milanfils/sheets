@@ -1,6 +1,6 @@
 from . import __version__ as app_version  # noqa
 
-app_name = "sheets2doctype"
+app_name = "google_sheets_connector"
 app_title = "Google Sheets Data Sync"
 app_publisher = "Gavin D'souza"
 app_description = "Sync data from Google Sheets to your DocTypes"
@@ -11,15 +11,15 @@ app_license = "No License"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/sheets2doctype/css/sheets2doctype.css"
-# app_include_js = "/assets/sheets2doctype/js/sheets2doctype.js"
+# app_include_css = "/assets/google_sheets_connector/css/google_sheets_connector.css"
+# app_include_js = "/assets/google_sheets_connector/js/google_sheets_connector.js"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/sheets2doctype/css/sheets2doctype.css"
-# web_include_js = "/assets/sheets2doctype/js/sheets2doctype.js"
+# web_include_css = "/assets/google_sheets_connector/css/google_sheets_connector.css"
+# web_include_js = "/assets/google_sheets_connector/js/google_sheets_connector.js"
 
 # include custom scss in every website theme (without file extension ".scss")
-# website_theme_scss = "sheets2doctype/public/scss/website"
+# website_theme_scss = "google_sheets_connector/public/scss/website"
 
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
@@ -56,27 +56,27 @@ app_license = "No License"
 
 # add methods and filters to jinja environment
 # jinja = {
-# 	"methods": "sheets2doctype.utils.jinja_methods",
-# 	"filters": "sheets2doctype.utils.jinja_filters"
+# 	"methods": "google_sheets_connector.utils.jinja_methods",
+# 	"filters": "google_sheets_connector.utils.jinja_filters"
 # }
 
 # Installation
 # ------------
 
-# before_install = "sheets2doctype.install.before_install"
-# after_install = "sheets2doctype.install.after_install"
+# before_install = "google_sheets_connector.install.before_install"
+# after_install = "google_sheets_connector.install.after_install"
 
 # Uninstallation
 # ------------
 
-# before_uninstall = "sheets2doctype.uninstall.before_uninstall"
-# after_uninstall = "sheets2doctype.uninstall.after_uninstall"
+# before_uninstall = "google_sheets_connector.uninstall.before_uninstall"
+# after_uninstall = "google_sheets_connector.uninstall.after_uninstall"
 
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
-# notification_config = "sheets2doctype.notifications.get_notification_config"
+# notification_config = "google_sheets_connector.notifications.get_notification_config"
 
 # Permissions
 # -----------
@@ -86,9 +86,9 @@ app_license = "No License"
 # 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
 # }
 #
-# has_permission = {
-# 	"Event": "frappe.desk.doctype.event.event.has_permission",
-# }
+has_permission = {
+    "File": "google_sheets_connector.overrides.has_permission",
+}
 
 # DocType Class
 # ---------------
@@ -115,39 +115,39 @@ app_license = "No License"
 
 # scheduler_events = {
 # 	"all": [
-# 		"sheets2doctype.tasks.all"
+# 		"google_sheets_connector.tasks.all"
 # 	],
 # 	"daily": [
-# 		"sheets2doctype.tasks.daily"
+# 		"google_sheets_connector.tasks.daily"
 # 	],
 # 	"hourly": [
-# 		"sheets2doctype.tasks.hourly"
+# 		"google_sheets_connector.tasks.hourly"
 # 	],
 # 	"weekly": [
-# 		"sheets2doctype.tasks.weekly"
+# 		"google_sheets_connector.tasks.weekly"
 # 	],
 # 	"monthly": [
-# 		"sheets2doctype.tasks.monthly"
+# 		"google_sheets_connector.tasks.monthly"
 # 	],
 # }
 
 # Testing
 # -------
 
-# before_tests = "sheets2doctype.install.before_tests"
+# before_tests = "google_sheets_connector.install.before_tests"
 
 # Overriding Methods
 # ------------------------------
 #
 # override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "sheets2doctype.event.get_events"
+# 	"frappe.desk.doctype.event.event.get_events": "google_sheets_connector.event.get_events"
 # }
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 # override_doctype_dashboards = {
-# 	"Task": "sheets2doctype.task.get_dashboard_data"
+# 	"Task": "google_sheets_connector.task.get_dashboard_data"
 # }
 
 # exempt linked doctypes from being automatically cancelled
@@ -188,5 +188,5 @@ app_license = "No License"
 # --------------------------------
 
 # auth_hooks = [
-# 	"sheets2doctype.auth.validate"
+# 	"google_sheets_connector.auth.validate"
 # ]

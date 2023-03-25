@@ -1,6 +1,6 @@
-## Google Sheets Data Sync
+## Google Sheets Connector
 
-Sync data from Google Sheets to your DocTypes
+Auto-Sync data from Google Sheets to your DocTypes
 
 #### License
 

@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-03-25 17:01:45.988760",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "service_account_section",
+  "service_account_credentials"
+ ],
+ "fields": [
+  {
+   "fieldname": "service_account_section",
+   "fieldtype": "Section Break",
+   "label": "Service Account"
+  },
+  {
+   "fieldname": "service_account_credentials",
+   "fieldtype": "Attach",
+   "label": "Credentials"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-03-25 17:01:45.988760",
+ "modified_by": "Administrator",
+ "module": "Google Workspace",
+ "name": "Google SpreadSheet Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

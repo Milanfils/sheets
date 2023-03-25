@@ -1,0 +1,62 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-03-25 17:28:04.086814",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "sheet_name",
+  "sheet_url",
+  "worksheet_ids"
+ ],
+ "fields": [
+  {
+   "fieldname": "sheet_name",
+   "fieldtype": "Data",
+   "label": "Sheet Name",
+   "unique": 1
+  },
+  {
+   "fieldname": "sheet_url",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Sheet URL",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "worksheet_ids",
+   "fieldtype": "Table",
+   "label": "Worksheet IDs",
+   "options": "DocType Worksheet Mapping"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-03-25 18:56:56.752792",
+ "modified_by": "Administrator",
+ "module": "Google Workspace",
+ "name": "Google SpreadSheet",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "sheet_name"
+}
