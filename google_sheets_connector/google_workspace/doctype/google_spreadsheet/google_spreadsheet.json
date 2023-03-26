@@ -9,7 +9,12 @@
  "field_order": [
   "sheet_name",
   "sheet_url",
-  "worksheet_ids"
+  "worksheet_ids",
+  "auto_import_settings_section",
+  "import_frequency",
+  "frequency_cron",
+  "column_break_yoez",
+  "frequency_description"
  ],
  "fields": [
   {
@@ -31,11 +36,38 @@
    "fieldtype": "Table",
    "label": "Worksheet IDs",
    "options": "DocType Worksheet Mapping"
+  },
+  {
+   "fieldname": "auto_import_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Auto Import Settings"
+  },
+  {
+   "fieldname": "import_frequency",
+   "fieldtype": "Select",
+   "label": "Import Frequency",
+   "options": "\nFrequently\nHourly\nDaily\nWeekly\nMonthly\nYearly\nCustom"
+  },
+  {
+   "depends_on": "eval: doc.import_frequency == \"Custom\"",
+   "fieldname": "frequency_cron",
+   "fieldtype": "Data",
+   "label": "Frequency Cron"
+  },
+  {
+   "fieldname": "frequency_description",
+   "fieldtype": "Read Only",
+   "is_virtual": 1,
+   "label": "Frequency Description"
+  },
+  {
+   "fieldname": "column_break_yoez",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-25 18:56:56.752792",
+ "modified": "2023-03-26 19:30:38.600491",
  "modified_by": "Administrator",
  "module": "Google Workspace",
  "name": "Google SpreadSheet",
