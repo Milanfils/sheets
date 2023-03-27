@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from frappe.core.doctype.file import File
 
     from google_sheets_connector.google_workspace.doctype.doctype_worksheet_mapping.doctype_worksheet_mapping import (
-    	DocTypeWorksheetMapping,
+        DocTypeWorksheetMapping,
     )
 
 
@@ -141,6 +141,9 @@ class GoogleSpreadSheet(Document):
         return worksheet.save()
 
     def create_data_import(self, data: str, worksheet: "DocTypeWorksheetMapping") -> "DataImport":
+        if worksheet.import_type == "Upsert":
+            raise NotImplementedError
+
         data_import = frappe.new_doc("Data Import")
         data_import.update(
             {

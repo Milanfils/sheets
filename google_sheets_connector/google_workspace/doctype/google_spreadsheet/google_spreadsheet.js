@@ -1,7 +1,15 @@
 // Copyright (c) 2023, Gavin D'souza and contributors
 // For license information, please see license.txt
 
-frappe.provide("gsc")
+frappe.provide("gsc");
+
+function setColor(child, idx, color) {
+    $(`div.grid-row[data-name="${child.name}"][data-idx="${idx+1}"] > .data-row > [data-fieldname="mapped_doctype"]`).css("background-color", color);
+}
+const color = {
+    success: "var(--green-100)",
+    failure: "var(--red-100)",
+}
 
 frappe.ui.form.on("Google SpreadSheet", {
     onload(frm) {
@@ -34,17 +42,13 @@ frappe.ui.form.on("Google SpreadSheet", {
     refresh(frm) {
         // frm.set_indicator_formatter("worksheet_ids", (doc) => {}); - doesn't seem to work... frappe bug? :thonk:
 
-        function setColor(child, idx, color) {
-            $(`div.grid-row[data-name="${child.name}"][data-idx="${idx+1}"] > .data-row > [data-fieldname="mapped_doctype"]`).css("background-color", color);
-        }
-
         // workaround for highlighting status
         frm.doc.worksheet_ids.forEach((child, idx) => {
             if (child.skip_failures) {
-                setColor(child, idx, "var(--green-100)");
+                setColor(child, idx, color.success);
             } else {
                 frappe.db.get_value("Data Import", child.last_import, "status", (({status}) => {
-                    setColor(child, idx, (status === "Completed") ? "var(--green-100)" : "var(--red-100)");
+                    setColor(child, idx, (status === "Completed") ? color.success : color.failure);
                 }));
             }
         });
