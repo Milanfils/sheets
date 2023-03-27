@@ -10,12 +10,18 @@ frappe.ui.form.on("Google SpreadSheet", {
         });
     },
     import_frequency(frm) {
-        if (frm.doc.import_frequency === "Frequently") {
+        if (!frm.doc.import_frequency) {
+            frm.set_value("frequency_description", null);
+        } else if (frm.doc.import_frequency === "Frequently") {
             frm.set_value("frequency_description", `Every ${gsc.all_frequency} Minutes`);
         } else if (frm.doc.import_frequency === "Custom") {
-            (frm.doc.frequency_cron && frm.doc.frequency_cron.split(" ").length >= 5) && frappe.xcall("google_sheets_connector.api.describe_cron", {"cron": frm.doc.frequency_cron }).then(message => {
-                frm.set_value("frequency_description", message);
-            });
+            if (frm.doc.frequency_cron && frm.doc.frequency_cron.split(" ").length >= 5) {
+                frappe.xcall("google_sheets_connector.api.describe_cron", {"cron": frm.doc.frequency_cron }).then(message => {
+                    frm.set_value("frequency_description", message);
+                });
+            } else {
+                frm.set_value("frequency_description", null);
+            }
         } else {
             frappe.xcall("google_sheets_connector.api.describe_cron", {"cron": frm.doc.import_frequency }).then(message => {
                 frm.set_value("frequency_description", message);
@@ -24,14 +30,30 @@ frappe.ui.form.on("Google SpreadSheet", {
     },
     frequency_cron(frm) {
         frm.trigger("import_frequency");
+    },
+    refresh(frm) {
+        // frm.set_indicator_formatter("worksheet_ids", (doc) => {}); - doesn't seem to work... frappe bug? :thonk:
+
+        function setColor(child, idx, color) {
+            $(`div.grid-row[data-name="${child.name}"][data-idx="${idx+1}"] > .data-row > [data-fieldname="mapped_doctype"]`).css("background-color", color);
+        }
+
+        // workaround for highlighting status
+        frm.doc.worksheet_ids.forEach((child, idx) => {
+            if (child.skip_failures) {
+                setColor(child, idx, "var(--green-100)");
+            } else {
+                frappe.db.get_value("Data Import", child.last_import, "status", (({status}) => {
+                    setColor(child, idx, (status === "Completed") ? "var(--green-100)" : "var(--red-100)");
+                }));
+            }
+        });
+
+        frm.add_custom_button("Trigger Import", () => {
+            frm.call("trigger_import");
+        });
+
     }
-// 	refresh(frm) {
-//         frm.add_custom_button("Show Spreadsheet Preview", () => {
-//             let preview_dialog = new frappe.ui.Dialog({
-//                 title: "Spreadsheet Preview",
-//             });
-//         });
-// 	},
 });
 
 frappe.ui.form.on("DocType Worksheet Mapping", {
