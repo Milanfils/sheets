@@ -48,6 +48,8 @@
    "default": "0",
    "fieldname": "reset_worksheet_on_import",
    "fieldtype": "Check",
+   "hidden": 1,
+   "in_list_view": 1,
    "label": "Reset Worksheet on Import"
   },
   {
@@ -93,7 +95,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-03-28 12:43:56.678385",
+ "modified": "2023-03-28 22:44:35.332277",
  "modified_by": "Administrator",
  "module": "Google Workspace",
  "name": "DocType Worksheet Mapping",
