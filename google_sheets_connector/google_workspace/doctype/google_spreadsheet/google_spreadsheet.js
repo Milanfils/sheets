@@ -10,7 +10,7 @@ const color = {
 
 frappe.ui.form.on("Google SpreadSheet", {
     onload(frm) {
-        frappe.xcall("google_sheets_connector.api.get_all_frequency").then(value_in_minutes => {
+        (!gsc.all_frequency) && frappe.xcall("google_sheets_connector.api.get_all_frequency").then(value_in_minutes => {
             gsc.all_frequency = value_in_minutes;
         });
     },
@@ -52,7 +52,9 @@ frappe.ui.form.on("Google SpreadSheet", {
         });
 
         frm.add_custom_button("Trigger Import", () => {
-            frm.call("trigger_import");
+            frm.call("trigger_import").then(r => {
+                frappe.show_alert({message: "Import Triggered", indicator: "green"}, 10);
+            });
         });
     }
 });
