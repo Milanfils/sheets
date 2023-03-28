@@ -1,6 +1,8 @@
 # Copyright (c) 2023, Gavin D'souza and contributors
 # For license information, please see license.txt
 
+from contextlib import contextmanager
+from csv import reader as csv_reader
 from csv import writer as csv_writer
 from difflib import SequenceMatcher
 from io import StringIO
@@ -15,6 +17,7 @@ from frappe.model.document import Document
 import google_sheets_connector
 from google_sheets_connector.api import get_all_frequency, get_description
 from google_sheets_connector.constants import INSERT, UPDATE, UPSERT
+from google_sheets_connector.overrides import update_record_patch
 
 if TYPE_CHECKING:
     from frappe.core.doctype.data_import.data_import import DataImport
@@ -105,9 +108,10 @@ class GoogleSpreadSheet(Document):
 
     @frappe.whitelist()
     def trigger_import(self):
-        for worksheet in self.worksheet_ids:
-            self.import_work_sheet(worksheet)
-        self.save()
+        with patch_importer():
+            for worksheet in self.worksheet_ids:
+                self.import_work_sheet(worksheet)
+            self.save()
 
     def get_id_field_for_upsert(self, worksheet: "DocTypeWorksheetMapping") -> str:
         worksheet_gdoc = (
@@ -142,23 +146,41 @@ class GoogleSpreadSheet(Document):
 
     def upsert_worksheet(self, worksheet: "DocTypeWorksheetMapping"):
         id_field = self.get_id_field_for_upsert(worksheet)  # required for upsert
-        successful_imports = frappe.get_all(
+
+        successful_insert_imports = frappe.get_all(
             "Data Import",
             filters={
                 "google_spreadsheet_id": self.name,
                 "google_worksheet_id": worksheet.name,
+                "import_type": INSERT,
                 "status": ("in", ["Success", "Partial Success"]),
             },
             fields=["name", "import_file"],
             order_by="creation",
         )
 
-        if not successful_imports:
+        if not successful_insert_imports:
             return self.insert_worksheet(worksheet)
+
+        successful_update_imports = frappe.get_all(
+            "Data Import",
+            filters={
+                "google_spreadsheet_id": self.name,
+                "google_worksheet_id": worksheet.name,
+                "import_type": UPDATE,
+                "status": ("in", ["Success", "Partial Success"]),
+            },
+            fields=["name", "import_file"],
+            order_by="creation",
+        )
+        update_csv_geneator = (
+            frappe.get_doc("File", {"file_url": x.import_file}).get_content()
+            for x in successful_update_imports
+        )
 
         csv_geneator = (
             frappe.get_doc("File", {"file_url": x.import_file}).get_content()
-            for x in successful_imports
+            for x in successful_insert_imports
         )
 
         data_imported_csv = ""
@@ -167,7 +189,25 @@ class GoogleSpreadSheet(Document):
                 data_imported_csv = csv_file
             else:
                 data_imported_csv += "\n" + csv_file.split("\n", 1)[-1]
-        data_imported_csv = data_imported_csv.splitlines()
+
+        data_imported_csv_file = list(csv_reader(StringIO(data_imported_csv)))
+        data_imported_csv_file_header = data_imported_csv_file[0]
+        id_field_imported_index = data_imported_csv_file_header.index(id_field)
+
+        # apply updates to the data imported
+        for csv_file in update_csv_geneator:
+            update_csv_reader = csv_reader(StringIO(csv_file))
+
+            header_row = next(update_csv_reader)
+            id_field_index = header_row.index(id_field)
+
+            for update_row in update_csv_reader:
+                for idx, data_row in enumerate(data_imported_csv_file):
+                    if update_row[id_field_index] == data_row[id_field_imported_index]:
+                        data_imported_csv_file[idx] = update_row
+
+        # Hack! use csv module to convert list to csv later
+        data_imported_csv = [",".join(x) for x in data_imported_csv_file]
 
         equivalent_spreadsheet_csv = self.fetch_entire_worksheet(
             worksheet_id=worksheet.worksheet_id
@@ -195,9 +235,11 @@ class GoogleSpreadSheet(Document):
 
     def insert_worksheet(self, worksheet: "DocTypeWorksheetMapping"):
         if worksheet.last_import:
-            data_import = frappe.get_doc("Data Import", worksheet.last_import)
+            data_import_status = frappe.db.get_value(
+                "Data Import", worksheet.last_import, "status"
+            )
 
-            if (data_import.status == "Success") or (data_import.status == "Partial Success"):
+            if data_import_status in ("Success", "Partial Success"):
                 if worksheet.reset_worksheet_on_import:
                     raise NotImplementedError
                     spreadsheet = self.get_sheet_client().open_by_url(self.sheet_url)
@@ -258,3 +300,13 @@ class GoogleSpreadSheet(Document):
 
     def get_import_file_name(self, worksheet_id: int):
         return f"{self.sheet_name}-worksheet-{worksheet_id}-{frappe.generate_hash(length=6)}.csv"
+
+
+@contextmanager
+def patch_importer():
+    from frappe.core.doctype.data_import.importer import Importer
+
+    _official_method = Importer.update_record
+    Importer.update_record = update_record_patch
+    yield
+    Importer.update_record = _official_method
