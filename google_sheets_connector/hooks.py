@@ -64,7 +64,7 @@ app_license = "No License"
 # ------------
 
 # before_install = "google_sheets_connector.install.before_install"
-# after_install = "google_sheets_connector.install.after_install"
+after_install = "google_sheets_connector.install.after_install"
 
 # Uninstallation
 # ------------

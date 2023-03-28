@@ -90,6 +90,10 @@ class GoogleSpreadSheet(Document):
         if self.frequency_cron and self.import_frequency == "Custom":
             croniter(self.frequency_cron)
 
+        # set default counter for worksheets
+        for worksheet in self.worksheet_ids:
+            worksheet.counter = worksheet.counter or 1
+
     def fetch_entire_worksheet(self, worksheet_id: int):
         spreadsheet = self.get_sheet_client().open_by_url(self.sheet_url)
         worksheet = spreadsheet.get_worksheet_by_id(worksheet_id)
