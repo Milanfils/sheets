@@ -3,12 +3,9 @@
 
 frappe.provide("gsc");
 
-function setColor(child, idx, color) {
-    $(`div.grid-row[data-name="${child.name}"][data-idx="${idx+1}"] > .data-row > [data-fieldname="mapped_doctype"]`).css("background-color", color);
-}
 const color = {
-    success: "var(--green-100)",
-    failure: "var(--red-100)",
+    success: "green",
+    failure: "red",
 }
 
 frappe.ui.form.on("Google SpreadSheet", {
@@ -40,23 +37,23 @@ frappe.ui.form.on("Google SpreadSheet", {
         frm.trigger("import_frequency");
     },
     refresh(frm) {
-        // frm.set_indicator_formatter("worksheet_ids", (doc) => {}); - doesn't seem to work... frappe bug? :thonk:
+        // workaround for highlighting status - frm.set_indicator_formatter didn't work?
+        frm.fields_dict.worksheet_ids.grid.grid_rows.forEach((row, idx) => {
+            const child = frm.doc.worksheet_ids[idx];
+            const status_field = $(row.columns.mapped_doctype);
 
-        // workaround for highlighting status
-        frm.doc.worksheet_ids.forEach((child, idx) => {
             if (child.skip_failures) {
-                setColor(child, idx, color.success);
+                status_field.addClass(`indicator ${color.success}`);
             } else {
-                frappe.db.get_value("Data Import", child.last_import, "status", (({status}) => {
-                    setColor(child, idx, (status === "Completed") ? color.success : color.failure);
-                }));
+                frappe.db.get_value("Data Import", child.last_import, "status", ({status}) => {
+                    status_field.addClass(`indicator ${status === "Success" ? color.success : color.failure}`);
+                });
             }
         });
 
         frm.add_custom_button("Trigger Import", () => {
             frm.call("trigger_import");
         });
-
     }
 });
 
