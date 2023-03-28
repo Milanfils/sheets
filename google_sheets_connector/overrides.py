@@ -17,7 +17,7 @@ def update_record_patch(self, doc):
     id_field = get_id_field(self.doctype)
     unique_field = None
 
-    # if no id field is set, try to find a unique field
+    # override_1: If no id field is set, try to find a unique field
     if not doc.get(id_field.fieldname):
         unique_fields = [df for df in frappe.get_meta(self.doctype).fields if df.unique]
         for field in unique_fields:
@@ -47,4 +47,5 @@ def update_record_patch(self, doc):
         }
         updated_doc.save()
         return updated_doc
+    # override_2: Return existing doc if no changes
     return existing_doc
