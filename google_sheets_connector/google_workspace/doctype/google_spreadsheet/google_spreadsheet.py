@@ -2,16 +2,19 @@
 # For license information, please see license.txt
 
 from csv import writer as csv_writer
+from difflib import SequenceMatcher
 from io import StringIO
 from typing import TYPE_CHECKING
 
 import frappe
 import gspread as gs
 from croniter import croniter
+from frappe.core.doctype.data_import.importer import get_autoname_field
 from frappe.model.document import Document
 
 import google_sheets_connector
 from google_sheets_connector.api import get_all_frequency, get_description
+from google_sheets_connector.constants import INSERT, UPDATE, UPSERT
 
 if TYPE_CHECKING:
     from frappe.core.doctype.data_import.data_import import DataImport
@@ -20,9 +23,6 @@ if TYPE_CHECKING:
     from google_sheets_connector.google_workspace.doctype.doctype_worksheet_mapping.doctype_worksheet_mapping import (
         DocTypeWorksheetMapping,
     )
-
-
-UPSERT = "Update Existing Records or Insert New Records"
 
 
 class GoogleSpreadSheet(Document):
@@ -109,7 +109,91 @@ class GoogleSpreadSheet(Document):
             self.import_work_sheet(worksheet)
         self.save()
 
+    def get_id_field_for_upsert(self, worksheet: "DocTypeWorksheetMapping") -> str:
+        worksheet_gdoc = (
+            self.get_sheet_client()
+            .open_by_url(self.sheet_url)
+            .get_worksheet_by_id(worksheet.worksheet_id)
+        )
+        header_row = worksheet_gdoc.row_values(1)
+
+        if "ID" in header_row:
+            return "ID"
+
+        autoname_field = get_autoname_field(worksheet.mapped_doctype)
+        if autoname_field and autoname_field.label in header_row:
+            return autoname_field.label
+
+        dt = frappe.get_meta(worksheet.mapped_doctype)
+        unique_fields = [df.label for df in dt.fields if df.unique]
+
+        for field in unique_fields:
+            if field in header_row:
+                return field
+
+        # Note: Should we provide a `worksheet.id_field` field to allow users to specify the ID field?
+        frappe.throw(f"Could not find ID or Unique field in {worksheet.doctype}")
+
     def import_work_sheet(self, worksheet: "DocTypeWorksheetMapping"):
+        if worksheet.get_import_type() == UPSERT:
+            self.upsert_worksheet(worksheet)
+        else:
+            self.insert_worksheet(worksheet)
+
+    def upsert_worksheet(self, worksheet: "DocTypeWorksheetMapping"):
+        id_field = self.get_id_field_for_upsert(worksheet)  # required for upsert
+        successful_imports = frappe.get_all(
+            "Data Import",
+            filters={
+                "google_spreadsheet_id": self.name,
+                "google_worksheet_id": worksheet.name,
+                "status": ("in", ["Success", "Partial Success"]),
+            },
+            fields=["name", "import_file"],
+            order_by="creation",
+        )
+
+        if not successful_imports:
+            return self.insert_worksheet(worksheet)
+
+        csv_geneator = (
+            frappe.get_doc("File", {"file_url": x.import_file}).get_content()
+            for x in successful_imports
+        )
+
+        data_imported_csv = ""
+        for csv_file in csv_geneator:  # order of imports (first to last)
+            if not data_imported_csv:
+                data_imported_csv = csv_file
+            else:
+                data_imported_csv += "\n" + csv_file.split("\n", 1)[-1]
+        data_imported_csv = data_imported_csv.splitlines()
+
+        equivalent_spreadsheet_csv = self.fetch_entire_worksheet(
+            worksheet_id=worksheet.worksheet_id
+        ).splitlines()[: worksheet.counter]
+
+        diff_opcodes = SequenceMatcher(
+            None, data_imported_csv, equivalent_spreadsheet_csv
+        ).get_grouped_opcodes(0)
+        diff_slices = [y[3:5] for y in [x[1] for x in diff_opcodes]]
+
+        updated_data = data_imported_csv[:1] + [
+            item
+            for sublist in [equivalent_spreadsheet_csv[slice(*x)] for x in diff_slices]
+            for item in sublist
+        ]
+
+        if len(updated_data) > 1:
+            updated_data_csv = "\n".join(updated_data)
+            di = self.create_data_import(updated_data_csv, worksheet, update=True)
+            di.start_import()
+            worksheet.last_update_import = di.name
+
+        worksheet.save()
+        return self.insert_worksheet(worksheet)
+
+    def insert_worksheet(self, worksheet: "DocTypeWorksheetMapping"):
         if worksheet.last_import:
             data_import = frappe.get_doc("Data Import", worksheet.last_import)
 
@@ -140,17 +224,14 @@ class GoogleSpreadSheet(Document):
 
         return worksheet.save()
 
-    def create_data_import(self, data: str, worksheet: "DocTypeWorksheetMapping") -> "DataImport":
-        if worksheet.import_type == "Upsert":
-            raise NotImplementedError
-
+    def create_data_import(
+        self, data: str, worksheet: "DocTypeWorksheetMapping", update: bool = False
+    ) -> "DataImport":
         data_import = frappe.new_doc("Data Import")
         data_import.update(
             {
                 "reference_doctype": worksheet.mapped_doctype,
-                "import_type": "Insert New Records"
-                if worksheet.import_type == "Insert"
-                else "Update Existing Records",
+                "import_type": UPDATE if update else INSERT,
                 "mute_emails": 1,
             }
         )
@@ -169,7 +250,10 @@ class GoogleSpreadSheet(Document):
         import_file.content = data.encode("utf-8")
         import_file.save()
 
+        data_import.google_spreadsheet_id = self.name
+        data_import.google_worksheet_id = worksheet.name
         data_import.import_file = import_file.file_url
+
         return data_import.save()
 
     def get_import_file_name(self, worksheet_id: int):

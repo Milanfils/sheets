@@ -4,6 +4,15 @@
 # import frappe
 from frappe.model.document import Document
 
+from google_sheets_connector.constants import INSERT, UPSERT
+
 
 class DocTypeWorksheetMapping(Document):
-    pass
+    def get_import_type(self):
+        match self.import_type:
+            case "Insert":
+                return INSERT
+            case "Upsert":
+                return UPSERT
+            case _:
+                raise ValueError("Invalid import type")
