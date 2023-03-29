@@ -40,7 +40,7 @@
   {
    "fieldname": "auto_import_settings_section",
    "fieldtype": "Section Break",
-   "label": "Auto Import Settings"
+   "label": "Import Settings"
   },
   {
    "fieldname": "import_frequency",
@@ -68,7 +68,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-27 13:52:14.963713",
+ "modified": "2023-03-29 15:10:06.039545",
  "modified_by": "Administrator",
  "module": "Google Workspace",
  "name": "Google SpreadSheet",

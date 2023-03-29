@@ -278,7 +278,8 @@ class GoogleSpreadSheet(Document):
             {
                 "reference_doctype": worksheet.mapped_doctype,
                 "import_type": UPDATE if update else INSERT,
-                "mute_emails": 1,
+                "mute_emails": worksheet.mute_emails,
+                "submit_after_import": worksheet.submit_after_import,
             }
         )
         data_import.save()

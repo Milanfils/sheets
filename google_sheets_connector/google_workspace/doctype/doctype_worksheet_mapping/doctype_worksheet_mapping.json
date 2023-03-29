@@ -13,7 +13,9 @@
   "section_break_v7u6",
   "last_import",
   "last_update_import",
+  "submit_after_import",
   "skip_failures",
+  "mute_emails",
   "column_break_57ew",
   "counter",
   "import_type"
@@ -67,7 +69,8 @@
   },
   {
    "fieldname": "section_break_v7u6",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Import Settings"
   },
   {
    "fieldname": "column_break_xr4k",
@@ -90,12 +93,24 @@
    "label": "Last Update Import",
    "options": "Data Import",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "mute_emails",
+   "fieldtype": "Check",
+   "label": "Don't Send Emails"
+  },
+  {
+   "default": "0",
+   "fieldname": "submit_after_import",
+   "fieldtype": "Check",
+   "label": "Submit After Import"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-03-28 22:44:35.332277",
+ "modified": "2023-03-29 15:10:37.525675",
  "modified_by": "Administrator",
  "module": "Google Workspace",
  "name": "DocType Worksheet Mapping",
