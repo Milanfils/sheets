@@ -10,6 +10,27 @@ def has_permission(doc, ptype, user):
         raise frappe.PermissionError("Not allowed to access")
 
 
+def get_initial_docs(self, doc, id_field, unique_field):
+    try:
+        if unique_field:
+            existing_doc = frappe.get_doc(
+                self.doctype, {unique_field.fieldname: doc.get(unique_field.fieldname)}
+            )
+            updated_doc = frappe.get_doc(
+                self.doctype, {unique_field.fieldname: doc.get(unique_field.fieldname)}
+            )
+        else:
+            existing_doc = frappe.get_doc(self.doctype, doc.get(id_field.fieldname))
+            updated_doc = frappe.get_doc(self.doctype, doc.get(id_field.fieldname))
+
+    except frappe.DoesNotExistError:
+        frappe.clear_last_message()
+        existing_doc = frappe.new_doc(self.doctype)
+        updated_doc = frappe.new_doc(self.doctype)
+
+    return existing_doc, updated_doc
+
+
 def update_record_patch(self, doc):
     from frappe import _
     from frappe.core.doctype.data_import.importer import get_diff, get_id_field
@@ -25,17 +46,8 @@ def update_record_patch(self, doc):
                 unique_field = field
                 break
 
-    if unique_field:
-        existing_doc = frappe.get_doc(
-            self.doctype, {unique_field.fieldname: doc.get(unique_field.fieldname)}
-        )
-        updated_doc = frappe.get_doc(
-            self.doctype, {unique_field.fieldname: doc.get(unique_field.fieldname)}
-        )
-    else:
-        existing_doc = frappe.get_doc(self.doctype, doc.get(id_field.fieldname))
-        updated_doc = frappe.get_doc(self.doctype, doc.get(id_field.fieldname))
-
+    # override_2: Use unique field if id field is not set, insert if existing doc is not found
+    existing_doc, updated_doc = get_initial_docs(self, doc, id_field, unique_field)
     updated_doc.update(doc)
 
     if get_diff(existing_doc, updated_doc):
@@ -47,5 +59,6 @@ def update_record_patch(self, doc):
         }
         updated_doc.save()
         return updated_doc
-    # override_2: Return existing doc if no changes
+
+    # override_3: Return existing doc if no changes
     return existing_doc
