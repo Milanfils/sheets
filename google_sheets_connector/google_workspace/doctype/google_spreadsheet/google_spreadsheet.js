@@ -60,6 +60,12 @@ frappe.ui.form.on("Google SpreadSheet", {
 });
 
 frappe.ui.form.on("DocType Worksheet Mapping", {
+    form_render(frm, cdt, cdn) {
+        frappe.model.with_doctype(frm.selected_doc.mapped_doctype, function() {
+            const is_submittable = frappe.get_meta(frm.selected_doc.mapped_doctype).is_submittable;
+            frm.cur_grid.set_field_property("submit_after_import", "hidden", !is_submittable);
+        });
+    },
     reset_worksheet_on_import(frm, cdt, cdn) {
         let child_doc = locals[cdt][cdn];
         let mapped_doctype = child_doc.mapped_doctype;
