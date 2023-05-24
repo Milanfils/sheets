@@ -1,5 +1,5 @@
 [project]
-name = "google_sheets_connector"
+name = "sheets"
 authors = [
     { name = "Gavin D'souza", email = "gavin18d@gmail.com"}
 ]

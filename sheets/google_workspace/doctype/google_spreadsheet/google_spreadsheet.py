@@ -14,16 +14,16 @@ from croniter import croniter
 from frappe.core.doctype.data_import.importer import get_autoname_field
 from frappe.model.document import Document
 
-import google_sheets_connector
-from google_sheets_connector.api import get_all_frequency, get_description
-from google_sheets_connector.constants import INSERT, UPDATE, UPSERT
-from google_sheets_connector.overrides import update_record_patch
+import sheets
+from sheets.api import get_all_frequency, get_description
+from sheets.constants import INSERT, UPDATE, UPSERT
+from sheets.overrides import update_record_patch
 
 if TYPE_CHECKING:
     from frappe.core.doctype.data_import.data_import import DataImport
     from frappe.core.doctype.file import File
 
-    from google_sheets_connector.google_workspace.doctype.doctype_worksheet_mapping.doctype_worksheet_mapping import (
+    from sheets.google_workspace.doctype.doctype_worksheet_mapping.doctype_worksheet_mapping import (
         DocTypeWorksheetMapping,
     )
 
@@ -46,9 +46,9 @@ class GoogleSpreadSheet(Document):
             file: "File" = frappe.get_doc(
                 "File",
                 {
-                    "attached_to_doctype": google_sheets_connector.SHEETS_SETTINGS,
-                    "attached_to_name": google_sheets_connector.SHEETS_SETTINGS,
-                    "attached_to_field": google_sheets_connector.SHEETS_CREDENTIAL_FIELD,
+                    "attached_to_doctype": sheets.SHEETS_SETTINGS,
+                    "attached_to_name": sheets.SHEETS_SETTINGS,
+                    "attached_to_field": sheets.SHEETS_CREDENTIAL_FIELD,
                 },
             )
             self._gc = gs.service_account(file.get_full_path())

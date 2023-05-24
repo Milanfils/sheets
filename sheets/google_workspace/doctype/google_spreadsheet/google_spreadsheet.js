@@ -10,7 +10,7 @@ const color = {
 
 frappe.ui.form.on("Google SpreadSheet", {
     onload(frm) {
-        (!gsc.all_frequency) && frappe.xcall("google_sheets_connector.api.get_all_frequency").then(value_in_minutes => {
+        (!gsc.all_frequency) && frappe.xcall("sheets.api.get_all_frequency").then(value_in_minutes => {
             gsc.all_frequency = value_in_minutes;
         });
     },
@@ -21,14 +21,14 @@ frappe.ui.form.on("Google SpreadSheet", {
             frm.set_value("frequency_description", `Every ${gsc.all_frequency} Minutes`);
         } else if (frm.doc.import_frequency === "Custom") {
             if (frm.doc.frequency_cron && frm.doc.frequency_cron.split(" ").length >= 5) {
-                frappe.xcall("google_sheets_connector.api.describe_cron", {"cron": frm.doc.frequency_cron }).then(message => {
+                frappe.xcall("sheets.api.describe_cron", {"cron": frm.doc.frequency_cron }).then(message => {
                     frm.set_value("frequency_description", message);
                 });
             } else {
                 frm.set_value("frequency_description", null);
             }
         } else {
-            frappe.xcall("google_sheets_connector.api.describe_cron", {"cron": frm.doc.import_frequency }).then(message => {
+            frappe.xcall("sheets.api.describe_cron", {"cron": frm.doc.import_frequency }).then(message => {
                 frm.set_value("frequency_description", message);
             });
         }

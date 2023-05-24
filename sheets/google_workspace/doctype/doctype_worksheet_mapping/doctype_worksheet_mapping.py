@@ -4,7 +4,7 @@
 # import frappe
 from frappe.model.document import Document
 
-from google_sheets_connector.constants import INSERT, UPSERT
+from sheets.constants import INSERT, UPSERT
 
 
 class DocTypeWorksheetMapping(Document):

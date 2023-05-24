@@ -1,9 +1,9 @@
 from . import __version__ as app_version  # noqa
 
-app_name = "google_sheets_connector"
-app_title = "Google Sheets Data Sync"
+app_name = "sheets"
+app_title = "Sheets"
 app_publisher = "Gavin D'souza"
-app_description = "Sync data from Google Sheets to your DocTypes"
+app_description = "Effortless synchronization between your online SpreadSheet Apps & ERPNext"
 app_email = "gavin18d@gmail.com"
 app_license = "No License"
 
@@ -11,15 +11,15 @@ app_license = "No License"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/google_sheets_connector/css/google_sheets_connector.css"
-# app_include_js = "/assets/google_sheets_connector/js/google_sheets_connector.js"
+# app_include_css = "/assets/sheets/css/sheets.css"
+# app_include_js = "/assets/sheets/js/sheets.js"
 
 # include js, css files in header of web template
-# web_include_css = "/assets/google_sheets_connector/css/google_sheets_connector.css"
-# web_include_js = "/assets/google_sheets_connector/js/google_sheets_connector.js"
+# web_include_css = "/assets/sheets/css/sheets.css"
+# web_include_js = "/assets/sheets/js/sheets.js"
 
 # include custom scss in every website theme (without file extension ".scss")
-# website_theme_scss = "google_sheets_connector/public/scss/website"
+# website_theme_scss = "sheets/public/scss/website"
 
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
@@ -56,27 +56,27 @@ app_license = "No License"
 
 # add methods and filters to jinja environment
 # jinja = {
-# 	"methods": "google_sheets_connector.utils.jinja_methods",
-# 	"filters": "google_sheets_connector.utils.jinja_filters"
+# 	"methods": "sheets.utils.jinja_methods",
+# 	"filters": "sheets.utils.jinja_filters"
 # }
 
 # Installation
 # ------------
 
-# before_install = "google_sheets_connector.install.before_install"
-after_install = "google_sheets_connector.install.after_install"
+# before_install = "sheets.install.before_install"
+after_install = "sheets.install.after_install"
 
 # Uninstallation
 # ------------
 
-# before_uninstall = "google_sheets_connector.uninstall.before_uninstall"
-# after_uninstall = "google_sheets_connector.uninstall.after_uninstall"
+# before_uninstall = "sheets.uninstall.before_uninstall"
+# after_uninstall = "sheets.uninstall.after_uninstall"
 
 # Desk Notifications
 # ------------------
 # See frappe.core.notifications.get_notification_config
 
-# notification_config = "google_sheets_connector.notifications.get_notification_config"
+# notification_config = "sheets.notifications.get_notification_config"
 
 # Permissions
 # -----------
@@ -87,7 +87,7 @@ after_install = "google_sheets_connector.install.after_install"
 # }
 #
 has_permission = {
-    "File": "google_sheets_connector.overrides.has_permission",
+    "File": "sheets.overrides.has_permission",
 }
 
 # DocType Class
@@ -115,39 +115,39 @@ has_permission = {
 
 # scheduler_events = {
 # 	"all": [
-# 		"google_sheets_connector.tasks.all"
+# 		"sheets.tasks.all"
 # 	],
 # 	"daily": [
-# 		"google_sheets_connector.tasks.daily"
+# 		"sheets.tasks.daily"
 # 	],
 # 	"hourly": [
-# 		"google_sheets_connector.tasks.hourly"
+# 		"sheets.tasks.hourly"
 # 	],
 # 	"weekly": [
-# 		"google_sheets_connector.tasks.weekly"
+# 		"sheets.tasks.weekly"
 # 	],
 # 	"monthly": [
-# 		"google_sheets_connector.tasks.monthly"
+# 		"sheets.tasks.monthly"
 # 	],
 # }
 
 # Testing
 # -------
 
-# before_tests = "google_sheets_connector.install.before_tests"
+# before_tests = "sheets.install.before_tests"
 
 # Overriding Methods
 # ------------------------------
 #
 # override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "google_sheets_connector.event.get_events"
+# 	"frappe.desk.doctype.event.event.get_events": "sheets.event.get_events"
 # }
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 # override_doctype_dashboards = {
-# 	"Task": "google_sheets_connector.task.get_dashboard_data"
+# 	"Task": "sheets.task.get_dashboard_data"
 # }
 
 # exempt linked doctypes from being automatically cancelled
@@ -188,5 +188,5 @@ has_permission = {
 # --------------------------------
 
 # auth_hooks = [
-# 	"google_sheets_connector.auth.validate"
+# 	"sheets.auth.validate"
 # ]
