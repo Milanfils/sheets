@@ -4,11 +4,11 @@ name: CI
 on:
   push:
     branches:
-      - develop
+      - main
   pull_request:
 
 concurrency:
-  group: develop-sheets-${{ github.event.number }}
+  group: main-sheets-${{ github.event.number }}
   cancel-in-progress: true
 
 jobs:
