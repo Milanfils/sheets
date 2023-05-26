@@ -55,7 +55,15 @@ class GoogleSpreadSheet(Document):
         return self._gc
 
     def validate(self):
-        # validate sheet access
+        self.validate_sync_settings()
+        self.validate_sheet_access()
+
+    def validate_sync_settings(self):
+        # validate cron pattern
+        if self.frequency_cron and self.import_frequency == "Custom":
+            croniter(self.frequency_cron)
+
+    def validate_sheet_access(self):
         sheet_client = self.get_sheet_client()
 
         try:
@@ -65,13 +73,14 @@ class GoogleSpreadSheet(Document):
                 f"Share spreadsheet with the following Service Account Email and try again: <b>{sheet_client.auth.service_account_email}</b>",
                 exc=e,
             )
+        self.set_sheet_metadata(sheet)
 
-        worksheet_ids = [str(w.id) for w in sheet.worksheets()]
-
-        # set sheet name
+    def set_sheet_metadata(self, sheet: "gs.Spreadsheet"):
+        # set sheet name if not set
         self.sheet_name = self.sheet_name or sheet.title
 
-        # set worksheet IDs
+        # set & validate worksheet ids
+        worksheet_ids = [str(w.id) for w in sheet.worksheets()]
         if "gid=" in self.sheet_url:
             self.sheet_url, gid = self.sheet_url.split("gid=", 1)
             if gid not in worksheet_ids:
@@ -85,10 +94,6 @@ class GoogleSpreadSheet(Document):
                 )
         elif not self.get("worksheet_ids"):
             self.extend("worksheet_ids", [{"worksheet_id": gid} for gid in worksheet_ids])
-
-        # validate cron pattern
-        if self.frequency_cron and self.import_frequency == "Custom":
-            croniter(self.frequency_cron)
 
         # set default counter for worksheets
         for worksheet in self.worksheet_ids:
