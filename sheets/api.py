@@ -10,13 +10,18 @@ CRON_MAP = {
 }
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["GET"])
 def get_all_frequency():
     return (frappe.conf.scheduler_interval or 240) // 60
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["GET"])
 def describe_cron(cron: str):
     if cron in CRON_MAP:
         cron = CRON_MAP[cron]
     return get_description(cron)
+
+
+@frappe.whitelist(methods=["POST"])
+def trigger_import(spreadsheet: str):
+    return frappe.get_doc("Google SpreadSheet", spreadsheet).trigger_import()

@@ -10,9 +10,15 @@ const color = {
 
 frappe.ui.form.on("Google SpreadSheet", {
     onload(frm) {
-        (!gsc.all_frequency) && frappe.xcall("sheets.api.get_all_frequency").then(value_in_minutes => {
-            gsc.all_frequency = value_in_minutes;
-        });
+        (!gsc.all_frequency) && frappe.call(
+            {
+                method: "sheets.api.get_all_frequency",
+                type: "GET",
+                callback: ({message}) => {
+                    gsc.all_frequency = message;
+                }
+            }
+        );
     },
     import_frequency(frm) {
         if (!frm.doc.import_frequency) {
@@ -20,16 +26,26 @@ frappe.ui.form.on("Google SpreadSheet", {
         } else if (frm.doc.import_frequency === "Frequently") {
             frm.set_value("frequency_description", `Every ${gsc.all_frequency} Minutes`);
         } else if (frm.doc.import_frequency === "Custom") {
-            if (frm.doc.frequency_cron && frm.doc.frequency_cron.trim().split(" ").length >= 5) {
-                frappe.xcall("sheets.api.describe_cron", {"cron": frm.doc.frequency_cron }).then(message => {
-                    frm.set_value("frequency_description", message);
+            if (frm.doc.frequency_cron?.trim().split(" ").length >= 5) {
+                frappe.call({
+                    method: "sheets.api.describe_cron",
+                    args: {"cron": frm.doc.frequency_cron },
+                    type: "GET",
+                    callback: ({message}) => {
+                        frm.set_value("frequency_description", message);
+                    }
                 });
             } else {
                 frm.set_value("frequency_description", null);
             }
         } else {
-            frappe.xcall("sheets.api.describe_cron", {"cron": frm.doc.import_frequency }).then(message => {
-                frm.set_value("frequency_description", message);
+            frappe.call({
+                method: "sheets.api.describe_cron",
+                args: {"cron": frm.doc.import_frequency },
+                type: "GET",
+                callback: ({message}) => {
+                    frm.set_value("frequency_description", message);
+                }
             });
         }
     },
