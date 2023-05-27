@@ -14,7 +14,8 @@
   "import_frequency",
   "frequency_cron",
   "column_break_yoez",
-  "frequency_description"
+  "frequency_description",
+  "server_script"
  ],
  "fields": [
   {
@@ -64,11 +65,18 @@
   {
    "fieldname": "column_break_yoez",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "server_script",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Server Script",
+   "options": "Server Script"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-29 15:10:06.039545",
+ "modified": "2023-05-27 16:05:59.655463",
  "modified_by": "Administrator",
  "module": "Google Workspace",
  "name": "Google SpreadSheet",

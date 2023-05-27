@@ -15,7 +15,7 @@ from frappe.core.doctype.data_import.importer import get_autoname_field
 from frappe.model.document import Document
 
 import sheets
-from sheets.api import get_all_frequency, get_description
+from sheets.api import describe_cron, get_all_frequency
 from sheets.constants import INSERT, UPDATE, UPSERT
 from sheets.overrides import update_record_patch
 
@@ -35,11 +35,11 @@ class GoogleSpreadSheet(Document):
             case None | "":
                 return
             case "Custom":
-                return get_description(self.frequency_cron)
+                return describe_cron(self.frequency_cron)
             case "Frequently":
-                return get_description(f"0/{get_all_frequency()} * * * *")
+                return describe_cron(f"0/{get_all_frequency()} * * * *")
             case _:
-                return get_description(self.import_frequency)
+                return describe_cron(self.import_frequency)
 
     def get_sheet_client(self):
         if not hasattr(self, "_gc"):
@@ -62,6 +62,43 @@ class GoogleSpreadSheet(Document):
         # validate cron pattern
         if self.frequency_cron and self.import_frequency == "Custom":
             croniter(self.frequency_cron)
+
+        # setup server script
+        if self.has_value_changed("import_frequency"):
+            script_name = f"SpreadSheet Import - {self.sheet_name}"
+
+            if self.import_frequency == "Custom":
+                event_frequency = "Cron"
+            elif self.import_frequency == "Frequently":
+                event_frequency = "All"
+            else:
+                event_frequency = self.import_frequency
+
+            if not self.server_script:
+                script = frappe.new_doc("Server Script").update(
+                    {
+                        "__newname": script_name,
+                        "script_type": "Scheduler Event",
+                        "script": f"frappe.get_doc('Google SpreadSheet', '{self.name}').trigger_import()",
+                        "event_frequency": event_frequency,
+                        "cron_format": self.frequency_cron,
+                    }
+                )
+
+            else:
+                script = frappe.get_doc("Server Script", self.server_script).update(
+                    {
+                        "event_frequency": event_frequency,
+                        "cron_format": self.frequency_cron,
+                    }
+                )
+
+            if not self.import_frequency:
+                script.disabled = True
+            else:
+                script.disabled = False
+                script.save()
+            self.server_script = script.name
 
     def validate_sheet_access(self):
         sheet_client = self.get_sheet_client()
@@ -121,6 +158,7 @@ class GoogleSpreadSheet(Document):
             for worksheet in self.worksheet_ids:
                 self.import_work_sheet(worksheet)
             self.save()
+        return self
 
     def get_id_field_for_upsert(self, worksheet: "DocTypeWorksheetMapping") -> str:
         worksheet_gdoc = (
