@@ -96,6 +96,7 @@ jobs:
       - name: Run Tests
         working-directory: /home/runner/frappe-bench
         run: |
+          cd sites && ../env/bin/gunicorn -b 127.0.0.1:8000 -w 4 -t 120 frappe.app:application --preload &
           bench --site test_site set-config allow_tests true
           bench --site test_site run-tests --app sheets
         env:
