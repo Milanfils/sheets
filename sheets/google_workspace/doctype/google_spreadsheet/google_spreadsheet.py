@@ -64,7 +64,7 @@ class GoogleSpreadSheet(Document):
             croniter(self.frequency_cron)
 
         # setup server script
-        if self.has_value_changed("import_frequency"):
+        if self.has_value_changed("import_frequency") or self.has_value_changed("frequency_cron"):
             script_name = f"SpreadSheet Import - {self.sheet_name}"
 
             if self.import_frequency == "Custom":
