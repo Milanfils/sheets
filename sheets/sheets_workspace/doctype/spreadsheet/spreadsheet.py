@@ -93,11 +93,8 @@ class SpreadSheet(Document):
                     }
                 )
 
-            if not self.import_frequency:
-                script.disabled = True
-            else:
-                script.disabled = False
-                script.save()
+            script.disabled = not self.import_frequency
+            script.save()
             self.server_script = script.name
 
     def validate_sheet_access(self):
@@ -158,6 +155,7 @@ class SpreadSheet(Document):
             for worksheet in self.worksheet_ids:
                 self.import_work_sheet(worksheet)
             self.save()
+        frappe.msgprint("Import Triggered Successfully", indicator="blue", alert=True)
         return self
 
     def get_id_field_for_upsert(self, worksheet: "DocTypeWorksheetMapping") -> str:
@@ -207,6 +205,11 @@ class SpreadSheet(Document):
         )
 
         if not successful_insert_imports:
+            frappe.msgprint(
+                "No successful inserts found to continue UPSERT. Falling back to INSERT instead.",
+                alert=True,
+                indicator="orange",
+            )
             return self.insert_worksheet(worksheet)
 
         successful_update_imports = frappe.get_all(
@@ -276,8 +279,14 @@ class SpreadSheet(Document):
             di = self.create_data_import(updated_data_csv, worksheet, update=True)
             di.start_import()
             worksheet.last_update_import = di.name
+            worksheet.save()
+        else:
+            frappe.msgprint(
+                "No updates found to continue UPSERT. Falling back to INSERT instead.",
+                alert=True,
+                indicator="orange",
+            )
 
-        worksheet.save()
         return self.insert_worksheet(worksheet)
 
     def insert_worksheet(self, worksheet: "DocTypeWorksheetMapping"):
@@ -307,9 +316,13 @@ class SpreadSheet(Document):
         # length includes header row
         if (counter := len(data.splitlines())) > 1:
             di = self.create_data_import(data, worksheet)
-            di.start_import()
+            frappe.enqueue_doc(
+                di.doctype, di.name, method="start_import", enqueue_after_commit=True
+            )
             worksheet.last_import = di.name
             worksheet.counter = (worksheet.counter or 1) + (counter - 1)  # subtract header row
+        else:
+            frappe.msgprint("No data found to import.", alert=True, indicator="orange")
 
         return worksheet.save()
 

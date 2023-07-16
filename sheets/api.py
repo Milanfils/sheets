@@ -20,8 +20,3 @@ def describe_cron(cron: str):
     if cron in CRON_MAP:
         cron = CRON_MAP[cron]
     return get_description(cron)
-
-
-@frappe.whitelist(methods=["POST"])
-def trigger_import(spreadsheet: str):
-    return frappe.get_doc("SpreadSheet", spreadsheet).trigger_import()

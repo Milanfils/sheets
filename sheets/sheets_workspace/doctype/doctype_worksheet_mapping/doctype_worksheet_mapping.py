@@ -15,4 +15,4 @@ class DocTypeWorksheetMapping(Document):
             case "Upsert":
                 return UPSERT
             case _:
-                raise ValueError("Invalid import type")
+                raise ValueError(f"Invalid import type: {self.import_type}")

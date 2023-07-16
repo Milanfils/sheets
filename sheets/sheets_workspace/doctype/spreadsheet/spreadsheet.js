@@ -68,9 +68,7 @@ frappe.ui.form.on("SpreadSheet", {
         });
 
         frm.add_custom_button("Trigger Import", () => {
-            frm.call("trigger_import").then(r => {
-                frappe.show_alert({message: "Import Triggered", indicator: "green"}, 10);
-            });
+            frm.call("trigger_import");
         });
     }
 });
