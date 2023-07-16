@@ -6,15 +6,15 @@ Effortless synchronization between your online SpreadSheet Apps & ERPNext
 
 ref: https://apps.odoo.com/apps/modules/14.0/wt_odoo_spreadsheet_connector/
 
-
 ### Details
 
 - setup spreadsheet document
-   - setup worksheet -> doctype mapping
-   - setup sync frequency
+  - setup worksheet -> doctype mapping
+  - setup sync frequency
 - app maintains row idx of worksheet to maintain last imported row
 
 Data import details
+
 - import job will fetch a subsection of the spreadsheet [counter:latest_idx] and store it as a temporary csv which will be used to create Data Import documents
 
 - Saving "SpreadSheet" document will trigger generation/updation of "Scheduled Job Type" documents / call internally defined function through Server Script defined automatically by this app. Maintain links to Server Script & Scheduled Job in doc
