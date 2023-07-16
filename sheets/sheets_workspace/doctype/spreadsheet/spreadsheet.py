@@ -13,6 +13,7 @@ import gspread as gs
 from croniter import croniter
 from frappe.core.doctype.data_import.importer import get_autoname_field
 from frappe.model.document import Document
+from frappe.utils import get_link_to_form
 
 import sheets
 from sheets.api import describe_cron, get_all_frequency
@@ -55,8 +56,22 @@ class SpreadSheet(Document):
         return self._gc
 
     def validate(self):
+        self.validate_base_settings()
         self.validate_sync_settings()
         self.validate_sheet_access()
+
+    def validate_base_settings(self):
+        # validate sheet url uniqueness
+        if another_exists := frappe.get_all(
+            self.doctype,
+            filters={"sheet_url": self.sheet_url, "name": ("!=", self.name)},
+            limit=1,
+            pluck="name",
+        ):
+            frappe.throw(
+                f"Sheet URL must be unique. Another sheet exists with the same URL: {get_link_to_form(self.doctype, another_exists[0])}",
+                title="Sheet URL must be unique",
+            )
 
     def validate_sync_settings(self):
         # validate cron pattern

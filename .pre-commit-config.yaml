@@ -1,7 +1,6 @@
-exclude: 'node_modules|.git'
+exclude: "node_modules|.git"
 default_stages: [commit]
 fail_fast: false
-
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -14,20 +13,24 @@ repos:
       - id: check-merge-conflict
       - id: check-ast
 
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.7.1
+    hooks:
+      - id: prettier
+        types_or: [javascript]
+
   - repo: https://github.com/PyCQA/flake8
     rev: 6.0.0
     hooks:
       - id: flake8
-        additional_dependencies: [
-          'flake8-bugbear',
-        ]
-        args: ['--config', '.flake8_strict']
+        additional_dependencies: ["flake8-bugbear"]
+        args: ["--config", ".flake8_strict"]
 
   - repo: https://github.com/psf/black
     rev: 23.3.0
     hooks:
       - id: black
-        additional_dependencies: ['click']
+        additional_dependencies: ["click"]
 
   - repo: https://github.com/timothycrosley/isort
     rev: 5.12.0

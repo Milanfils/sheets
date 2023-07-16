@@ -21,8 +21,7 @@
   {
    "fieldname": "sheet_name",
    "fieldtype": "Data",
-   "label": "Sheet Name",
-   "unique": 1
+   "label": "Sheet Name"
   },
   {
    "fieldname": "sheet_url",
@@ -76,7 +75,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-05-27 16:05:59.655463",
+ "modified": "2023-07-16 21:37:28.988041",
  "modified_by": "Administrator",
  "module": "Sheets Workspace",
  "name": "SpreadSheet",

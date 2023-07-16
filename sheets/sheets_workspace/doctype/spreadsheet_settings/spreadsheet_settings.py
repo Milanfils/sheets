@@ -3,6 +3,9 @@
 
 from frappe.model.document import Document
 
+from sheets.billing import clear_cache
+
 
 class SpreadSheetSettings(Document):
-    ...
+    def on_change(self):
+        clear_cache()

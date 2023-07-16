@@ -9,7 +9,9 @@
  "field_order": [
   "service_account_section",
   "service_account_credentials",
-  "sheets_user_id"
+  "sheets_user_id",
+  "column_break_v3wh",
+  "sheets_plan_details"
  ],
  "fields": [
   {
@@ -25,13 +27,21 @@
   {
    "fieldname": "sheets_user_id",
    "fieldtype": "Password",
-   "hidden": 1
+   "label": "Site Token"
+  },
+  {
+   "fieldname": "sheets_plan_details",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "column_break_v3wh",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-06-30 20:33:21.050907",
+ "modified": "2023-07-16 21:28:29.566332",
  "modified_by": "Administrator",
  "module": "Sheets Workspace",
  "name": "SpreadSheet Settings",
