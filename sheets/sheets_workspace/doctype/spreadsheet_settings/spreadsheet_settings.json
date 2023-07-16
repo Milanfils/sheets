@@ -8,7 +8,8 @@
  "engine": "InnoDB",
  "field_order": [
   "service_account_section",
-  "service_account_credentials"
+  "service_account_credentials",
+  "sheets_user_id"
  ],
  "fields": [
   {
@@ -20,15 +21,20 @@
    "fieldname": "service_account_credentials",
    "fieldtype": "Attach",
    "label": "Credentials"
+  },
+  {
+   "fieldname": "sheets_user_id",
+   "fieldtype": "Password",
+   "hidden": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-03-25 17:01:45.988760",
+ "modified": "2023-06-30 20:33:21.050907",
  "modified_by": "Administrator",
- "module": "Google Workspace",
- "name": "Google SpreadSheet Settings",
+ "module": "Sheets Workspace",
+ "name": "SpreadSheet Settings",
  "owner": "Administrator",
  "permissions": [
   {

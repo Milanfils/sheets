@@ -24,4 +24,4 @@ def describe_cron(cron: str):
 
 @frappe.whitelist(methods=["POST"])
 def trigger_import(spreadsheet: str):
-    return frappe.get_doc("Google SpreadSheet", spreadsheet).trigger_import()
+    return frappe.get_doc("SpreadSheet", spreadsheet).trigger_import()

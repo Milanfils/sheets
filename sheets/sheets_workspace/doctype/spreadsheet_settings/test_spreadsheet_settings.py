@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestGoogleSpreadSheetSettings(FrappeTestCase):
+class TestSpreadSheetSettings(FrappeTestCase):
     pass

@@ -11,7 +11,7 @@ from frappe.tests.utils import FrappeTestCase
 from frappe.utils import get_site_url
 from requests import get
 
-from sheets.google_workspace.doctype.google_spreadsheet.google_spreadsheet import patch_importer
+from sheets.sheets_workspace.doctype.spreadsheet.spreadsheet import patch_importer
 
 
 def whitelist_for_ci(fn):
@@ -29,7 +29,7 @@ def test_api(patch: bool = True):
         return patch, hasattr(Importer, "patched")
 
 
-class TestGoogleSpreadSheet(FrappeTestCase):
+class TestSpreadSheet(FrappeTestCase):
     def test_importer_monkey_patches(self):
         # Tested with gunicorn workers = 2, 10 & 17 - lgtm
         API_PATH = f"{get_site_url(frappe.local.site)}/api/method/{test_api.__module__}.{test_api.__qualname__}"

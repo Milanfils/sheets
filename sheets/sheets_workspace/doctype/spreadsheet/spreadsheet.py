@@ -23,12 +23,12 @@ if TYPE_CHECKING:
     from frappe.core.doctype.data_import.data_import import DataImport
     from frappe.core.doctype.file import File
 
-    from sheets.google_workspace.doctype.doctype_worksheet_mapping.doctype_worksheet_mapping import (
+    from sheets.sheets_workspace.doctype.doctype_worksheet_mapping.doctype_worksheet_mapping import (
         DocTypeWorksheetMapping,
     )
 
 
-class GoogleSpreadSheet(Document):
+class SpreadSheet(Document):
     @property
     def frequency_description(self):
         match self.import_frequency:
@@ -79,7 +79,7 @@ class GoogleSpreadSheet(Document):
                     {
                         "__newname": script_name,
                         "script_type": "Scheduler Event",
-                        "script": f"frappe.get_doc('Google SpreadSheet', '{self.name}').trigger_import()",
+                        "script": f"frappe.get_doc('SpreadSheet', '{self.name}').trigger_import()",
                         "event_frequency": event_frequency,
                         "cron_format": self.frequency_cron,
                     }
@@ -197,8 +197,8 @@ class GoogleSpreadSheet(Document):
         successful_insert_imports = frappe.get_all(
             "Data Import",
             filters={
-                "google_spreadsheet_id": self.name,
-                "google_worksheet_id": worksheet.name,
+                "spreadsheet_id": self.name,
+                "worksheet_id": worksheet.name,
                 "import_type": INSERT,
                 "status": ("in", ["Success", "Partial Success"]),
             },
@@ -212,8 +212,8 @@ class GoogleSpreadSheet(Document):
         successful_update_imports = frappe.get_all(
             "Data Import",
             filters={
-                "google_spreadsheet_id": self.name,
-                "google_worksheet_id": worksheet.name,
+                "spreadsheet_id": self.name,
+                "worksheet_id": worksheet.name,
                 "import_type": UPDATE,
                 "status": ("in", ["Success", "Partial Success"]),
             },
@@ -340,8 +340,8 @@ class GoogleSpreadSheet(Document):
         import_file.content = data.encode("utf-8")
         import_file.save()
 
-        data_import.google_spreadsheet_id = self.name
-        data_import.google_worksheet_id = worksheet.name
+        data_import.spreadsheet_id = self.name
+        data_import.worksheet_id = worksheet.name
         data_import.import_file = import_file.file_url
 
         return data_import.save()

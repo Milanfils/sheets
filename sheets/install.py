@@ -5,10 +5,10 @@ def create_data_import_fields():
     create_custom_field(
         "Data Import",
         {
-            "fieldname": "google_spreadsheet_id",
-            "label": "Google SpreadSheet ID",
+            "fieldname": "spreadsheet_id",
+            "label": "SpreadSheet ID",
             "fieldtype": "Link",
-            "options": "Google SpreadSheet",
+            "options": "SpreadSheet",
             "insert_after": "import_file",
             "read_only": 1,
         },
@@ -16,11 +16,11 @@ def create_data_import_fields():
     create_custom_field(
         "Data Import",
         {
-            "fieldname": "google_worksheet_id",
-            "label": "Google Worksheet ID",
+            "fieldname": "worksheet_id",
+            "label": "Worksheet ID",
             "fieldtype": "Link",
             "options": "DocType Worksheet Mapping",
-            "insert_after": "google_spreadsheet_id",
+            "insert_after": "spreadsheet_id",
             "hidden": 1,
         },
     )

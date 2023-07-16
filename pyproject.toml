@@ -3,7 +3,7 @@ name = "sheets"
 authors = [
     { name = "Gavin D'souza", email = "gavin18d@gmail.com"}
 ]
-description = "Sync data from Google Sheets to your DocTypes"
+description = "Sync data from Remote Sheets to your DocTypes"
 requires-python = ">=3.8"
 readme = "README.md"
 dynamic = ["version"]

@@ -78,8 +78,8 @@
  "links": [],
  "modified": "2023-05-27 16:05:59.655463",
  "modified_by": "Administrator",
- "module": "Google Workspace",
- "name": "Google SpreadSheet",
+ "module": "Sheets Workspace",
+ "name": "SpreadSheet",
  "owner": "Administrator",
  "permissions": [
   {

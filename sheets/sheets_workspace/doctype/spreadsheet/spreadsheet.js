@@ -8,7 +8,7 @@ const color = {
     failure: "red",
 }
 
-frappe.ui.form.on("Google SpreadSheet", {
+frappe.ui.form.on("SpreadSheet", {
     onload(frm) {
         (!gsc.all_frequency) && frappe.call(
             {
@@ -88,7 +88,7 @@ frappe.ui.form.on("DocType Worksheet Mapping", {
         let to_enable = child_doc.reset_worksheet_on_import;
 
         let confirm_message = to_enable ?
-            `Enabling this means all imported ${mapped_doctype} data from Google SpreadSheet will be deleted. Counter will also be reset.` :
+            `Enabling this means all imported ${mapped_doctype} data from SpreadSheet will be deleted. Counter will also be reset.` :
             `Disabling this means the data in the SpreadSheet will not changed after successful imports. Counter will be used to keep track of imported ${mapped_doctype} data`;
 
         frappe.confirm(confirm_message, ()=>{
