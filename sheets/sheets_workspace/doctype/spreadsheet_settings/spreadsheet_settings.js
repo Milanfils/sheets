@@ -21,7 +21,7 @@ Limits: ${
                 .map((x) => `${x.value} ${x.doctype}`)
                 .join(", ")
         }`;
-        let planMessage = `Your site is running on the ${planName}. ${message.plan_management_message}`;
+        let planMessage = `Your site is running on the ${planName}. ${message.PLAN_MANAGEMENT_MSG}`;
 
         html_wrapper.html(`<div class="row text-primary rounded p-2" style="background: ${
           planMeta.metadata.requires_activation ? "aliceblue" : "antiquewhite"
