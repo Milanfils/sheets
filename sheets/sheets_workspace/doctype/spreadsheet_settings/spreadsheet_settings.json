@@ -9,8 +9,9 @@
  "field_order": [
   "service_account_section",
   "service_account_credentials",
+  "sheets_plan_section",
   "sheets_user_id",
-  "column_break_v3wh",
+  "column_break_gjjw",
   "sheets_plan_details"
  ],
  "fields": [
@@ -34,14 +35,19 @@
    "fieldtype": "HTML"
   },
   {
-   "fieldname": "column_break_v3wh",
+   "fieldname": "sheets_plan_section",
+   "fieldtype": "Section Break",
+   "label": "Active Plan"
+  },
+  {
+   "fieldname": "column_break_gjjw",
    "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-07-16 21:28:29.566332",
+ "modified": "2023-08-13 13:35:37.066935",
  "modified_by": "Administrator",
  "module": "Sheets Workspace",
  "name": "SpreadSheet Settings",
