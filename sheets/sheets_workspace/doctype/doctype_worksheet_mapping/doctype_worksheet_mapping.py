@@ -6,7 +6,7 @@ from csv import writer as csv_writer
 from difflib import SequenceMatcher
 from functools import cached_property
 from io import StringIO
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING
 
 import frappe
 from frappe.core.doctype.data_import.importer import get_autoname_field
@@ -169,9 +169,7 @@ class DocTypeWorksheetMapping(Document):
     def generate_import_file_name(self):
         return f"{self.parent_doc.sheet_name}-worksheet-{self.worksheet_id}-{frappe.generate_hash(length=6)}.csv"
 
-    def create_data_import(
-        self, data: str, import_type: Union[UPDATE, INSERT] = INSERT
-    ) -> "DataImport":
+    def create_data_import(self, data: str, import_type=INSERT) -> "DataImport":
         data_import = frappe.new_doc("Data Import")
         data_import.update(
             {
