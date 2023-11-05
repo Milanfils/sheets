@@ -27,15 +27,15 @@ def get_sheets_auth_token():
 
 
 def get_sheets_active_plan():
-    plan = frappe.cache.get_value("sheets_active_plan", expires=True)
+    plan = frappe.cache().get_value("sheets_active_plan", expires=True)
 
     if plan and not is_plan_expired(plan):
         return plan
 
     plan = fetch_active_plan_from_api()
     expires_in_sec = 24 * 60 * 60
-    frappe.cache.set_value("sheets_active_plan", plan, expires_in_sec=expires_in_sec)
-    frappe.cache.set_value(
+    frappe.cache().set_value("sheets_active_plan", plan, expires_in_sec=expires_in_sec)
+    frappe.cache().set_value(
         "sheets_restrict_doctypes",
         {d["doctype"] for d in plan["meta"]["metadata"]["limits"]},
         expires_in_sec=expires_in_sec,
@@ -63,7 +63,7 @@ def fetch_active_plan_from_api():
 
 
 def validate(doc, method: str | None = None):
-    if doc.doctype not in (frappe.cache.get_value("sheets_restrict_doctypes") or {}):
+    if doc.doctype not in (frappe.cache().get_value("sheets_restrict_doctypes") or {}):
         return
 
     delta = 1 if doc.get("__islocal") else 0
@@ -81,6 +81,6 @@ def validate(doc, method: str | None = None):
 
 
 def clear_cache():
-    frappe.cache.delete_value("sheets_active_plan")
-    frappe.cache.delete_value("sheets_restrict_doctypes")
+    frappe.cache().delete_value("sheets_active_plan")
+    frappe.cache().delete_value("sheets_restrict_doctypes")
     get_available_plans.clear_cache()
