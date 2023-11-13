@@ -2,18 +2,16 @@
 
 Effortless synchronization between your online SpreadSheet Apps & ERPNext
 
-1. Make a service account for this use case (ref: https://docs.gspread.org/en/latest/oauth2.html#for-bots-using-service-account)
-
-ref: https://apps.odoo.com/apps/modules/14.0/wt_odoo_spreadsheet_connector/
 
 ### Details
 
-- setup spreadsheet document
+1. Make a service account for auth of Sheets (ref: https://docs.gspread.org/en/latest/oauth2.html#for-bots-using-service-account)
+2. Setup spreadsheet document
   - setup worksheet -> doctype mapping
   - setup sync frequency
 - app maintains row idx of worksheet to maintain last imported row
 
-Data import details
+#### Data import details
 
 - import job will fetch a subsection of the spreadsheet [counter:latest_idx] and store it as a temporary csv which will be used to create Data Import documents
 
@@ -23,4 +21,6 @@ Use Data Import as view for the results of the import - new custom field(s) ("Ge
 
 #### License
 
-No License
+This is a restricted use license. You may not redistribute this software in any form or manner, including but not limited to providing access, hosting, or distributing copies. You may not copy, modify, or create derivative works based on this software.
+
+Refer to [LICENSE](LICENSE) for more details. Contact Gavin D'souza at sheets@gavv.in for more information.
