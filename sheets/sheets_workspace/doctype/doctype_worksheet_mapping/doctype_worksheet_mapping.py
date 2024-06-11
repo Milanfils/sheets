@@ -129,7 +129,9 @@ class DocTypeWorksheetMapping(Document):
 
             if last_data_import_status not in ACCEPTABLE_IMPORT_STATUSES:
                 frappe.throw(
-                    f"Skipping import as last import has status '{last_data_import_status}'. Fix issues in {get_link_to_form('Data Import', self.last_import, 'the last import')} and try again. Acceptable statues are: {ACCEPTABLE_IMPORT_STATUSES.join(', ')}",
+                    f"Skipping import as last import has status '{last_data_import_status}'. "
+                    f"Fix issues in {get_link_to_form('Data Import', self.last_import, 'the last import')} and try again. "
+                    f"Acceptable statues are: {', '.join(ACCEPTABLE_IMPORT_STATUSES)}",
                 )
 
             if self.reset_worksheet_on_import:
