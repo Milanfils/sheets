@@ -102,11 +102,7 @@ has_permission = {
 # ---------------
 # Hook on document methods and events
 
-doc_events = {
-    "SpreadSheet": {
-        "before_validate": "sheets.billing.validate",
-    }
-}
+doc_events = {}
 
 # Scheduled Tasks
 # ---------------
