@@ -23,4 +23,4 @@ Use Data Import as view for the results of the import - new custom field(s) ("Ge
 
 Copyright © 2023, Gavin D'souza [gavin18d@gmail.com].
 
-ToolBox is released under "GNU GPLv3" License. Refer to [LICENSE](LICENSE) for full information.
+Sheets is released under "GNU GPLv3" License. Refer to [LICENSE](LICENSE) for full information.
