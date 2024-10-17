@@ -21,6 +21,6 @@ Use Data Import as view for the results of the import - new custom field(s) ("Ge
 
 #### License
 
-This is a restricted use license. You may not redistribute this software in any form or manner, including but not limited to providing access, hosting, or distributing copies. You may not copy, modify, or create derivative works based on this software.
+Copyright © 2023, Gavin D'souza [gavin18d@gmail.com].
 
-Refer to [LICENSE](LICENSE) for more details. Contact Gavin D'souza at sheets@gavv.in for more information.
+ToolBox is released under "GNU GPLv3" License. Refer to [LICENSE](LICENSE) for full information.
